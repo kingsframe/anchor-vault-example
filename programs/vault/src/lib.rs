@@ -141,7 +141,7 @@ pub struct Close<'info> {
         mut,
         seeds=[b"state", signer.key().as_ref()],
         bump=vault_state.state_bump,
-        close=vault_state
+        close=signer
     )]
     pub vault_state: Account<'info, VaultState>,
     #[account(
