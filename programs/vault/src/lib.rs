@@ -1,5 +1,10 @@
 use anchor_lang::{prelude::*, system_program::{transfer, Transfer}};
 
+pub mod instructions;
+pub mod state;
+
+use crate::instructions::*;
+
 declare_id!("HTtjNAGGVf6Hafb4ENfkfXLuGu8TDBtjbPJExsNc31QX");
 
 #[program]
@@ -21,6 +26,17 @@ pub mod vault {
     }
     pub fn close(ctx: Context<Close>) -> Result<()> {
         ctx.accounts.close()?;
+        Ok(())
+    }
+
+    pub fn make(ctx: Context<Make>, seed: u64, receive_amount: u64, deposit_amount: u64) -> Result<()> {
+        ctx.accounts.init_escrow_state(seed, receive_amount, &ctx.bumps)?;
+        ctx.accounts.deposit(deposit_amount)?;
+        Ok(())
+    }
+    pub fn take(ctx: Context<Take>) -> Result<()> {
+        ctx.accounts.deposit()?;
+        ctx.accounts.withdraw_and_close_vault()?;
         Ok(())
     }
 }
